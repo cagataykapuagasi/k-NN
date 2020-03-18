@@ -12,8 +12,8 @@ namespace Project
     public class Object
     {
         public string name;
-        public int count, positiveCount, negativeCount, neutralCount;
-        public double MutualInfo;
+        public int count, positiveCount, negativeCount;
+        public double Es;
 
         public Object(string name)
         {
@@ -36,32 +36,28 @@ namespace Project
             negativeCount++;
         }
 
-        public void incrementNeutralCount()
-        {
-            neutralCount++;
-        }
+        //public void incrementNeutralCount()
+        //{
+        //    neutralCount++;
+        //}
 
-        public void handleMutualInformation() //Feature selection via Mutual Information
+        public void handleEs() //class ın Es değerini hesaplar
         {
-            double first = positiveCount * 1.0 / count, second = negativeCount * 1.0 / count, third = neutralCount * 1.0 / count, firstLog = 0, secondLog = 0, thirdLog = 0;
-            int all = positiveCount + negativeCount + neutralCount;
+            double first = positiveCount * 1.0 / count, second = negativeCount * 1.0 / count, firstLog = 0, secondLog = 0;
 
             if (first != 0) //0 ise logaritma alma
             {
-                firstLog = Math.Log((positiveCount * count) / (756.0 * all), 2);
-
+                firstLog = Math.Log(first, 2);
             }
             if (second != 0) 
             {
-                secondLog = Math.Log((negativeCount * count) / (1287.0 * all), 2);
-            }
-            if (third != 0)
-            {
-                thirdLog = Math.Log((neutralCount * count) / (957.0 * all), 2);
-            }
+                secondLog = Math.Log(second, 2);
 
+            }
+            Es = -first * firstLog - second * secondLog;
+            //E(S) değerinin hesaplanması
 
-            MutualInfo = (first * firstLog) + (second * secondLog) + (third * thirdLog);
+            //Console.WriteLine(Es);
         }
     }
 
@@ -92,21 +88,21 @@ namespace Project
                 
                 readAndHandle("1");
                 readAndHandle("2");
-                readAndHandle("3");
+                //readAndHandle("3");
 
-                double averageMI = 0.0;
+                double averageES = 0.0;
                 foreach (Object o in list)
                 {
-                    o.handleMutualInformation();
-                    averageMI += o.MutualInfo;
+                    o.handleEs();
+                    averageES += o.Es;
                 }
 
                 List<Object> newList = new List<Object>();
-                averageMI = averageMI / list.Count;
+                averageES = averageES / list.Count;
 
-                foreach(Object o in list)  //MI ı ortalamadan düşük olan wordler temizlendi
+                foreach (Object o in list)  //Es ı ortalamadan düşük olan wordler temizlendi
                 {
-                    if(o.MutualInfo > averageMI)
+                    if (o.Es > averageES)
                     {
                         newList.Add(o);
                     }
@@ -154,12 +150,9 @@ namespace Project
                     if(num == "1") //klasör isimlerine göre başka sınıf frekanslarını arttırır
                     {
                         obj.incrementPositiveCount();
-                    } else if(num == "2")
-                    {
-                        obj.incrementNegativeCount();
                     } else
                     {
-                        obj.incrementNeutralCount();
+                        obj.incrementNegativeCount();
                     }
 
                     if(isNew)
