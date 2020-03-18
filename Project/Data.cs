@@ -9,7 +9,7 @@ using System.Text.RegularExpressions;
 
 namespace Project
 {
-    class Object
+    public class Object
     {
         public string name;
         public int count, positiveCount, negativeCount, neutralCount;
@@ -41,7 +41,7 @@ namespace Project
             neutralCount++;
         }
 
-        public void handleMutualInformation() //Child ın kendi Es değerini hesaplaması
+        public void handleMutualInformation() //Feature selection via Mutual Information
         {
             double first = positiveCount * 1.0 / count, second = negativeCount * 1.0 / count, third = neutralCount * 1.0 / count, firstLog = 0, secondLog = 0, thirdLog = 0;
             int all = positiveCount + negativeCount + neutralCount;
@@ -61,20 +61,15 @@ namespace Project
             }
 
 
-
             MutualInfo = (first * firstLog) + (second * secondLog) + (third * thirdLog);
-
-            Console.WriteLine(MutualInfo);
-
         }
-
     }
 
     public class Data
     {
-        List<Object> positive = new List<Object>();
-        List<Object> negative = new List<Object>();
-        List<Object> neutral = new List<Object>();
+        public List<Object> list = new List<Object>();
+        //List<Object> negative = new List<Object>();
+        //List<Object> neutral = new List<Object>();
         List<string> stop_words = new List<string>();
         Zemberek zemberek = new Zemberek(new TurkiyeTurkcesi());
         static public double Es; //Global E(s) değeri
@@ -91,12 +86,22 @@ namespace Project
             
             try //klasördeki verilerin okunması source: https://stackoverflow.com/questions/5840443/how-to-read-all-files-inside-particular-folder
             {
+                Console.WriteLine("Processing...");
                 stop_words.AddRange(File.ReadLines("stop-words.txt"));
 
-                readAndHandle(positive, "1");
-                readAndHandle(negative, "2");
-                readAndHandle(neutral, "3");
                 
+                readAndHandle("1");
+                readAndHandle("2");
+                readAndHandle("3");
+
+                foreach (Object o in list)
+                {
+                    o.handleMutualInformation();
+                    //Console.WriteLine(o.name + "-" + o.MutualInfo);
+                }
+
+                Console.WriteLine();
+                Console.WriteLine("The data processing was finished.");
             }
             catch (Exception e)
             {
@@ -106,15 +111,18 @@ namespace Project
             }
         }
 
-        void readAndHandle(List<Object> list, string num) 
+        void readAndHandle(string num) //dosyayı okuyup gerekli işlemlerden sonra frekans sayılarını hesaplayıp listeye ekler.
         {
+            Console.WriteLine();
+            Console.WriteLine("Reading folder "+num+"...");
+
             foreach (string file in Directory.EnumerateFiles(num))
             {
                 var tokenizedStrings = tokenizer(File.ReadAllText(file).ToLower(new CultureInfo("tr-TR", false)));
                 var stopWordedStrings = stopWords(tokenizedStrings);
                 var stemmedStrings = stemming(stopWordedStrings);
 
-                foreach (string i in stemmedStrings)
+                foreach (string i in stemmedStrings) //handle edilmiş dizimizi alıp frekansları hesaplar
                 {
                     Object obj = list.Find(x => x.name == i);
                     bool isNew =  false;
@@ -129,7 +137,7 @@ namespace Project
                         isNew = true;
                     }
 
-                    if(num == "1")
+                    if(num == "1") //klasör isimlerine göre başka sınıf frekanslarını arttırır
                     {
                         obj.incrementPositiveCount();
                     } else if(num == "2")
@@ -148,22 +156,15 @@ namespace Project
                 }
             }
 
-            foreach(Object o in list)
-            {
-                o.handleMutualInformation();
-
-                //Console.WriteLine(o.name + "-" + o.MutualInfo);
-            }
-
         }
 
 
-        string[] tokenizer(string value)
+        string[] tokenizer(string value) //cümleyi kelimelere parçalama
         {
             return value.Split(null);
         }
 
-        string[] stopWords(string[] array)
+        string[] stopWords(string[] array) //dosyadaki stopwordlerde geçen elemanın silinmesi
         {
             List<string> newArray = new List<string>(array);
 
@@ -182,7 +183,7 @@ namespace Project
             return newArray.ToArray();
         }
 
-        string[] stemming(string[] array)
+        string[] stemming(string[] array) //zemberek kullanılarak kök haline getirme
         {
             List<string> newArray = new List<string>(array);
 
@@ -192,13 +193,9 @@ namespace Project
                 var stems = zemberek.kelimeCozumle(i);
                 if (stems.Length > 0)
                 {
-                    //Console.Write("ilk " + i + "-");
-
                     newArray.Add(stems[0].kok().icerik());
                 }
-
-                //if (stems.Length > 0)
-                    //Console.WriteLine("sonra " + stems[0].kok().icerik());
+             
             }
 
 
