@@ -5,6 +5,18 @@ using System.Globalization;
 
 namespace Project
 {
+    class Object
+    {
+        public string name;
+        public int frequent;
+
+        public Object(string name, int frequent)
+        {
+            this.name = name;
+            this.frequent = frequent;
+        }
+    }
+
     public class Data
     {
         List<string[]> positive = new List<string[]>();
@@ -27,9 +39,9 @@ namespace Project
 
                 foreach (string file in Directory.EnumerateFiles("1"))
                 {
-                    var tokenizedStrings = tokenizer(File.ReadAllText(file).ToLower(new CultureInfo("tr-TR", false)));
-                    var stopWordedStrings = stopWords(tokenizedStrings);
-                    positive.Add(stopWordedStrings);
+                    var tokenizedStrings = tokenizer(File.ReadAllText(file).ToLower(new CultureInfo("tr-TR", false))); //tokenizer işlemi için lowercase yapıp boşluklardan itibaren bölmek.
+                    var stopWordedStrings = stopWords(tokenizedStrings); //Stopwords lerle eşleşen stringleri çıkartmak
+                    positive.Add(stopWordedStrings); //handle olmuş datayı listeye eklemek
                     
                 }
                 foreach (string file in Directory.EnumerateFiles("2"))
