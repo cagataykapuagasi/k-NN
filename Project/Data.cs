@@ -35,6 +35,12 @@ namespace Project
         {
             negativeCount++;
         }
+
+        //public void incrementNeutralCount()
+        //{
+        //    neutralCount++;
+        //}
+
         public void handleEs() //class ın Es değerini hesaplar
         {
             double first = positiveCount * 1.0 / count, second = negativeCount * 1.0 / count, firstLog = 0, secondLog = 0;
@@ -50,13 +56,16 @@ namespace Project
             }
             Es = -first * firstLog - second * secondLog;
             //E(S) değerinin hesaplanması
+
+            //Console.WriteLine(Es);
         }
     }
 
     public class Data
     {
         public List<Object> list = new List<Object>();
-        List<string[]> neutral = new List<string[]>();
+        //List<Object> negative = new List<Object>();
+        //List<Object> neutral = new List<Object>();
         List<string> stop_words = new List<string>();
         Zemberek zemberek = new Zemberek(new TurkiyeTurkcesi());
         static public double Es; //Global E(s) değeri
@@ -79,7 +88,7 @@ namespace Project
                 
                 readAndHandle("1");
                 readAndHandle("2");
-                readAndHandle("3");
+                //readAndHandle("3");
 
                 double averageES = 0.0;
                 foreach (Object o in list)
@@ -115,21 +124,13 @@ namespace Project
         void readAndHandle(string num) //dosyayı okuyup gerekli işlemlerden sonra frekans sayılarını hesaplayıp listeye ekler.
         {
             Console.WriteLine();
-            Console.Write("Reading folder "+num+"...");
+            Console.WriteLine("Reading folder "+num+"...");
 
             foreach (string file in Directory.EnumerateFiles(num))
             {
                 var tokenizedStrings = tokenizer(File.ReadAllText(file).ToLower(new CultureInfo("tr-TR", false)));
                 var stopWordedStrings = stopWords(tokenizedStrings);
                 var stemmedStrings = stemming(stopWordedStrings);
-
-                if(num == "3") //nötr klasör ise frekans vb değerlerin hesaplanmadan işlemden çıkılması
-                {
-                    neutral.Add(stemmedStrings);
-                    Console.Write(" Ok.");
-                    Console.WriteLine();
-                    return;
-                }
 
                 foreach (string i in stemmedStrings) //handle edilmiş dizimizi alıp frekansları hesaplar
                 {
@@ -161,8 +162,7 @@ namespace Project
 
                 }
             }
-            Console.Write(" Ok.");
-            Console.WriteLine();
+
         }
 
 
