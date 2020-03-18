@@ -13,9 +13,9 @@ namespace Project
     {
         public string name;
         public int count, positiveCount, negativeCount, neutralCount;
-        public double Es;
+        public double MutualInfo;
 
-        public Object(string name, int frequent)
+        public Object(string name)
         {
             this.name = name;
             incrementCount();
@@ -41,36 +41,40 @@ namespace Project
             neutralCount++;
         }
 
-        public void handleEs() //Child ın kendi Es değerini hesaplaması
+        public void handleMutualInformation() //Child ın kendi Es değerini hesaplaması
         {
-            double first = positiveCount * 1.0 / count, second = negativeCount * 1.0 / count,third = neutralCount * 1.0 / count, firstLog = 0, secondLog = 0, thirdLog = 0;
+            double first = positiveCount * 1.0 / count, second = negativeCount * 1.0 / count, third = neutralCount * 1.0 / count, firstLog = 0, secondLog = 0, thirdLog = 0;
+            int all = positiveCount + negativeCount + neutralCount;
 
             if (first != 0) //0 ise logaritma alma
             {
-                firstLog = Math.Log(first, 2);
+                firstLog = Math.Log((positiveCount * count) / (756.0 * all), 2);
+
             }
             if (second != 0) 
             {
-                secondLog = Math.Log(second, 2);
-
+                secondLog = Math.Log((negativeCount * count) / (1287.0 * all), 2);
             }
             if (third != 0)
             {
-                thirdLog = Math.Log(second, 2);
-
+                thirdLog = Math.Log((neutralCount * count) / (957.0 * all), 2);
             }
 
 
-            Es = -first * firstLog - second * secondLog - third * thirdLog;
+
+            MutualInfo = (first * firstLog) + (second * secondLog) + (third * thirdLog);
+
+            Console.WriteLine(MutualInfo);
+
         }
 
     }
 
     public class Data
     {
-        List<string[]> positive = new List<string[]>();
-        List<string[]> negative = new List<string[]>();
-        List<string[]> neutral = new List<string[]>();
+        List<Object> positive = new List<Object>();
+        List<Object> negative = new List<Object>();
+        List<Object> neutral = new List<Object>();
         List<string> stop_words = new List<string>();
         Zemberek zemberek = new Zemberek(new TurkiyeTurkcesi());
         static public double Es; //Global E(s) değeri
@@ -85,44 +89,13 @@ namespace Project
         void init()
         {
             
-            var suggestions = zemberek.kelimeCozumle("denemeler");
-            if(suggestions.Length > 0)
-            Console.WriteLine(suggestions[0].kok().icerik());
-
-            Console.WriteLine(suggestions[0]);
-            Console.WriteLine(suggestions[1]);
-            Console.WriteLine(suggestions[2]);
-
-            
             try //klasördeki verilerin okunması source: https://stackoverflow.com/questions/5840443/how-to-read-all-files-inside-particular-folder
             {
                 stop_words.AddRange(File.ReadLines("stop-words.txt"));
 
-                foreach (string file in Directory.EnumerateFiles("1"))
-                {
-                    var tokenizedStrings = tokenizer(File.ReadAllText(file).ToLower(new CultureInfo("tr-TR", false))); //tokenizer işlemi için lowercase yapıp boşluklardan itibaren bölmek.
-                    var stopWordedStrings = stopWords(tokenizedStrings); //Stopwords lerle eşleşen stringleri çıkartmak
-                    var stemmedStrings = stemming(stopWordedStrings);
-                  
-                    positive.Add(stemmedStrings); //handle olmuş datayı listeye eklemek
-                }
-                foreach (string file in Directory.EnumerateFiles("2"))
-                {
-                    var tokenizedStrings = tokenizer(File.ReadAllText(file).ToLower(new CultureInfo("tr-TR", false)));
-                    var stopWordedStrings = stopWords(tokenizedStrings);
-                    var stemmedStrings = stemming(stopWordedStrings);
-
-                    negative.Add(stemmedStrings);
-                }
-                foreach (string file in Directory.EnumerateFiles("3"))
-                {
-                    var tokenizedStrings = tokenizer(File.ReadAllText(file).ToLower(new CultureInfo("tr-TR", false)));
-                    var stopWordedStrings = stopWords(tokenizedStrings);
-                    var stemmedStrings = stemming(stopWordedStrings);
-
-                    neutral.Add(stemmedStrings);
-                }
-
+                readAndHandle(positive, "1");
+                readAndHandle(negative, "2");
+                readAndHandle(neutral, "3");
                 
             }
             catch (Exception e)
@@ -133,13 +106,64 @@ namespace Project
             }
         }
 
+        void readAndHandle(List<Object> list, string num) 
+        {
+            foreach (string file in Directory.EnumerateFiles(num))
+            {
+                var tokenizedStrings = tokenizer(File.ReadAllText(file).ToLower(new CultureInfo("tr-TR", false)));
+                var stopWordedStrings = stopWords(tokenizedStrings);
+                var stemmedStrings = stemming(stopWordedStrings);
 
-        string[] tokenizer(String value)
+                foreach (string i in stemmedStrings)
+                {
+                    Object obj = list.Find(x => x.name == i);
+                    bool isNew =  false;
+
+                    if (obj != null)
+                    {
+                        obj.incrementCount();
+                    }
+                    else
+                    {
+                        obj = new Object(i);
+                        isNew = true;
+                    }
+
+                    if(num == "1")
+                    {
+                        obj.incrementPositiveCount();
+                    } else if(num == "2")
+                    {
+                        obj.incrementNegativeCount();
+                    } else
+                    {
+                        obj.incrementNeutralCount();
+                    }
+
+                    if(isNew)
+                    {
+                        list.Add(obj);
+                    }
+
+                }
+            }
+
+            foreach(Object o in list)
+            {
+                o.handleMutualInformation();
+
+                //Console.WriteLine(o.name + "-" + o.MutualInfo);
+            }
+
+        }
+
+
+        string[] tokenizer(string value)
         {
             return value.Split(null);
         }
 
-        string[] stopWords(String[] array)
+        string[] stopWords(string[] array)
         {
             List<string> newArray = new List<string>(array);
 
@@ -158,7 +182,7 @@ namespace Project
             return newArray.ToArray();
         }
 
-        string[] stemming(String[] array)
+        string[] stemming(string[] array)
         {
             List<string> newArray = new List<string>(array);
 
@@ -168,13 +192,13 @@ namespace Project
                 var stems = zemberek.kelimeCozumle(i);
                 if (stems.Length > 0)
                 {
-                    Console.Write("ilk " + i + "-");
+                    //Console.Write("ilk " + i + "-");
 
                     newArray.Add(stems[0].kok().icerik());
                 }
 
-                if (stems.Length > 0)
-                    Console.WriteLine("sonra " + stems[0].kok().icerik());
+                //if (stems.Length > 0)
+                    //Console.WriteLine("sonra " + stems[0].kok().icerik());
             }
 
 
