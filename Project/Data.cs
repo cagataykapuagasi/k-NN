@@ -128,7 +128,7 @@ namespace Project
         void readAndHandle(string num) //dosyayı okuyup gerekli işlemlerden sonra frekans sayılarını hesaplayıp listeye ekler.
         {
             Console.WriteLine();
-            Console.WriteLine("Reading folder "+num+"...");
+            Console.Write("Reading folder "+num+"...");
 
             foreach (string file in Directory.EnumerateFiles(num))
             {
@@ -169,6 +169,9 @@ namespace Project
 
                 }
             }
+
+            Console.Write(" Ok.");
+            Console.WriteLine();
 
         }
 
