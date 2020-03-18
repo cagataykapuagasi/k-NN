@@ -11,12 +11,8 @@ namespace Project
         static void Main(string[] args)
         {
             Data data = new Data();
-            Console.WriteLine("Hello World!");
 
-            foreach(Object i in data.list)
-            {
-                //Console.WriteLine(i.name);
-            }
+            Console.WriteLine("Hello World!");
 
             Console.Read();
         }

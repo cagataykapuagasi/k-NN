@@ -45,7 +45,7 @@ namespace Project
             {
                 firstLog = Math.Log(positiveAccuracy, 2);
             }
-            if (negativeAccuracy != 0)
+            if (negativeAccuracy != 0) 
             {
                 secondLog = Math.Log(negativeAccuracy, 2);
 
@@ -72,13 +72,13 @@ namespace Project
 
         void init()
         {
-
+            
             try //klasördeki verilerin okunması source: https://stackoverflow.com/questions/5840443/how-to-read-all-files-inside-particular-folder
             {
                 Console.WriteLine("Processing...");
                 stop_words.AddRange(File.ReadLines("stop-words.txt"));
 
-
+                
                 readAndHandle("1");
                 readAndHandle("2");
                 readAndHandle("3");
@@ -117,7 +117,7 @@ namespace Project
         void readAndHandle(string num) //dosyayı okuyup gerekli işlemlerden sonra frekans sayılarını hesaplayıp listeye ekler.
         {
             Console.WriteLine();
-            Console.Write("Reading folder " + num + "...");
+            Console.Write("Reading folder "+num+"...");
 
             foreach (string file in Directory.EnumerateFiles(num))
             {
@@ -125,7 +125,7 @@ namespace Project
                 var stopWordedStrings = stopWords(tokenizedStrings);
                 var stemmedStrings = stemming(stopWordedStrings);
 
-                if (num == "3") //nötr klasör ise frekans vb değerlerin hesaplanmadan işlemden çıkılması
+                if(num == "3") //nötr klasör ise frekans vb değerlerin hesaplanmadan işlemden çıkılması
                 {
                     neutral.Add(stemmedStrings);
                     Console.Write(" Ok.");
@@ -136,7 +136,7 @@ namespace Project
                 foreach (string i in stemmedStrings) //handle edilmiş dizimizi alıp frekansları hesaplar
                 {
                     Object obj = list.Find(x => x.name == i);
-                    bool isNew = false;
+                    bool isNew =  false;
 
                     if (obj != null)
                     {
@@ -148,16 +148,15 @@ namespace Project
                         isNew = true;
                     }
 
-                    if (num == "1") //klasör isimlerine göre başka sınıf frekanslarını arttırır
+                    if(num == "1") //klasör isimlerine göre başka sınıf frekanslarını arttırır
                     {
                         obj.incrementPositiveCount();
-                    }
-                    else
+                    } else
                     {
                         obj.incrementNegativeCount();
                     }
 
-                    if (isNew)
+                    if(isNew)
                     {
                         list.Add(obj);
                     }
@@ -199,13 +198,13 @@ namespace Project
 
             foreach (string i in array)
             {
-
+               
                 var stems = zemberek.kelimeCozumle(i);
                 if (stems.Length > 0)
                 {
                     newArray.Add(stems[0].kok().icerik());
                 }
-
+             
             }
 
 
@@ -216,7 +215,7 @@ namespace Project
         {
             double positiveCount = 756, negativeCount = 1287, neutralCount = 957, count = 3000;
 
-            double firstLog = Math.Log(positiveCount / count, 2); // 2 tabanında logaritma alımı
+            double firstLog = Math.Log(positiveCount /count, 2); // 2 tabanında logaritma alımı
             double secondLog = Math.Log(negativeCount / count, 2);
             double thirdLog = Math.Log(neutralCount / count, 2);
 
