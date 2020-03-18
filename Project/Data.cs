@@ -78,7 +78,7 @@ namespace Project
         public Data()
         {
             init();
-            handleEs();
+            handleStaticEs();
         }
 
 
@@ -181,7 +181,7 @@ namespace Project
             return newArray.ToArray();
         }
 
-        void handleEs()
+        void handleStaticEs()
         {
             double positiveCount = 756, negativeCount = 1287, neutralCount = 957, count = 3000;
 
