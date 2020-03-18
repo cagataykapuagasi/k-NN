@@ -13,7 +13,7 @@ namespace Project
     {
         public string name;
         public int count, positiveCount, negativeCount;
-        public double Es;
+        public double Es, positiveAccuracy, negativeAccuracy;
 
         public Object(string name)
         {
@@ -37,18 +37,20 @@ namespace Project
         }
         public void handleEs() //class ın Es değerini hesaplar
         {
-            double first = positiveCount * 1.0 / count, second = negativeCount * 1.0 / count, firstLog = 0, secondLog = 0;
+            double firstLog = 0, secondLog = 0;
+            positiveAccuracy = positiveCount * 1.0 / count;
+            negativeAccuracy = negativeCount * 1.0 / count;
 
-            if (first != 0) //0 ise logaritma alma
+            if (positiveAccuracy != 0) //0 ise logaritma alma
             {
-                firstLog = Math.Log(first, 2);
+                firstLog = Math.Log(positiveAccuracy, 2);
             }
-            if (second != 0) 
+            if (negativeAccuracy != 0) 
             {
-                secondLog = Math.Log(second, 2);
+                secondLog = Math.Log(negativeAccuracy, 2);
 
             }
-            Es = -first * firstLog - second * secondLog;
+            Es = -positiveAccuracy * firstLog - negativeAccuracy * secondLog;
             //E(S) değerinin hesaplanması
         }
     }
