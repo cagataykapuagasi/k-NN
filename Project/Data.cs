@@ -2,6 +2,8 @@
 using System.IO;
 using System.Collections.Generic;
 using System.Globalization;
+using net.zemberek.erisim;
+using net.zemberek.tr.yapi;
 
 namespace Project
 {
@@ -32,6 +34,10 @@ namespace Project
 
         void init()
         {
+            var zemberek = new Zemberek(new TurkiyeTurkcesi());
+            var suggestions = zemberek.oner("selamlar naber");
+            //Console.WriteLine(suggestions[0]);
+
 
             try //klasördeki verilerin okunması source: https://stackoverflow.com/questions/5840443/how-to-read-all-files-inside-particular-folder
             {
@@ -41,6 +47,8 @@ namespace Project
                 {
                     var tokenizedStrings = tokenizer(File.ReadAllText(file).ToLower(new CultureInfo("tr-TR", false))); //tokenizer işlemi için lowercase yapıp boşluklardan itibaren bölmek.
                     var stopWordedStrings = stopWords(tokenizedStrings); //Stopwords lerle eşleşen stringleri çıkartmak
+                   
+
                     positive.Add(stopWordedStrings); //handle olmuş datayı listeye eklemek
                     
                 }
@@ -57,8 +65,8 @@ namespace Project
                     neutral.Add(stopWordedStrings);
                 }
 
-                foreach (String i in positive[5])
-                    Console.WriteLine(i);
+                //foreach (String i in positive[5])
+                    //Console.WriteLine(i);
             }
             catch (Exception e)
             {
