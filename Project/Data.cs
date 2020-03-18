@@ -49,12 +49,12 @@ namespace Project
             {
                 firstLog = Math.Log(first, 2);
             }
-            if (second != 0) //0 ise logaritma alma
+            if (second != 0) 
             {
                 secondLog = Math.Log(second, 2);
 
             }
-            if (third != 0) //0 ise logaritma alma
+            if (third != 0)
             {
                 thirdLog = Math.Log(second, 2);
 
@@ -63,6 +63,7 @@ namespace Project
 
             Es = -first * firstLog - second * secondLog - third * thirdLog;
         }
+
     }
 
     public class Data
@@ -72,10 +73,12 @@ namespace Project
         List<string[]> neutral = new List<string[]>();
         List<string> stop_words = new List<string>();
         Zemberek zemberek = new Zemberek(new TurkiyeTurkcesi());
+        static public double Es; //Global E(s) değeri
 
         public Data()
         {
             init();
+            handleEs();
         }
 
 
@@ -90,7 +93,7 @@ namespace Project
             Console.WriteLine(suggestions[1]);
             Console.WriteLine(suggestions[2]);
 
-
+            
             try //klasördeki verilerin okunması source: https://stackoverflow.com/questions/5840443/how-to-read-all-files-inside-particular-folder
             {
                 stop_words.AddRange(File.ReadLines("stop-words.txt"));
@@ -100,13 +103,7 @@ namespace Project
                     var tokenizedStrings = tokenizer(File.ReadAllText(file).ToLower(new CultureInfo("tr-TR", false))); //tokenizer işlemi için lowercase yapıp boşluklardan itibaren bölmek.
                     var stopWordedStrings = stopWords(tokenizedStrings); //Stopwords lerle eşleşen stringleri çıkartmak
                     var stemmedStrings = stemming(stopWordedStrings);
-
-                    if(stemmedStrings.Length > 0)
-                    {
-                        //Console.WriteLine(stemmedStrings[0]);
-
-                    }
-
+                  
                     positive.Add(stemmedStrings); //handle olmuş datayı listeye eklemek
                 }
                 foreach (string file in Directory.EnumerateFiles("2"))
@@ -182,6 +179,19 @@ namespace Project
 
 
             return newArray.ToArray();
+        }
+
+        void handleEs()
+        {
+            double positiveCount = 756, negativeCount = 1287, neutralCount = 957, count = 3000;
+
+            double firstLog = Math.Log(positiveCount /count, 2); // 2 tabanında logaritma alımı
+            double secondLog = Math.Log(negativeCount / count, 2);
+            double thirdLog = Math.Log(neutralCount / count, 2);
+
+            Es = -(positiveCount / count) * firstLog -
+                  (negativeCount / count) * secondLog -
+                  (neutralCount / count) * thirdLog; //E(S) değerinin hesaplanması
         }
     }
 }
