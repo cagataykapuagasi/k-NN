@@ -94,11 +94,25 @@ namespace Project
                 readAndHandle("2");
                 readAndHandle("3");
 
+                double averageMI = 0.0;
                 foreach (Object o in list)
                 {
                     o.handleMutualInformation();
-                    //Console.WriteLine(o.name + "-" + o.MutualInfo);
+                    averageMI += o.MutualInfo;
                 }
+
+                List<Object> newList = new List<Object>();
+                averageMI = averageMI / list.Count;
+
+                foreach(Object o in list)  //MI ı ortalamadan düşük olan wordler temizlendi
+                {
+                    if(o.MutualInfo > averageMI)
+                    {
+                        newList.Add(o);
+                    }
+                }
+
+                list = newList;
 
                 Console.WriteLine();
                 Console.WriteLine("The data processing was finished.");
