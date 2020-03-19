@@ -6,122 +6,136 @@ using System.Linq;
 using net.zemberek.erisim;
 using net.zemberek.tr.yapi;
 using System.Text.RegularExpressions;
+using static System.Net.Mime.MediaTypeNames;
+using System.Reflection;
 
 namespace Project
 {
-    public class Test
-    {
-       public List<string> list = new List<string>();
-       public string className;
-       public string guess;
+    //public class Column
+    //{
+    //    public List<Object> list = new List<Object>();
+    //    public string className;
+    //    public Column()
+    //    {
 
-        public string Guess
-        {
-            get
-            {
-                return guess;
-            }
-            set
-            {
-                guess = value;
-            }
-        }
-       public Test(string[] list, string className)
-       {
-            this.list.AddRange(list);
-            this.className = className;
-       }
-    }
-    public class Object
-    {
-        public string name;
-        public int count, positiveCount, negativeCount, neutralCount;
-        public double MutualInfo, Es;
+    //    }
+    //}
+    //public class Test
+    //{
+    //   public List<string> list = new List<string>();
+    //   public string className;
+    //   public string guess;
 
-        public Object(string name)
-        {
-            this.name = name;
-            incrementCount();
-        }
+    //    public string Guess
+    //    {
+    //        get
+    //        {
+    //            return guess;
+    //        }
+    //        set
+    //        {
+    //            guess = value;
+    //        }
+    //    }
+    //   public Test(string[] list, string className)
+    //   {
+    //        this.list.AddRange(list);
+    //        this.className = className;
+    //   }
+    //}
+    //public class Object
+    //{
+    //    public string name;
+    //    public int count, positiveCount, negativeCount, neutralCount;
+    //    public double MutualInfo, Es, tfIdf;
 
-        public void incrementCount()
-        {
-            count++;
-        }
+    //    public Object(string name)
+    //    {
+    //        this.name = name;
+    //        incrementCount();
+    //    }
 
-        public void incrementPositiveCount()
-        {
-            positiveCount++;
-        }
+    //    public void incrementCount()
+    //    {
+    //        count++;
+    //    }
 
-        public void incrementNegativeCount()
-        {
-            negativeCount++;
-        }
+    //    public void incrementPositiveCount()
+    //    {
+    //        positiveCount++;
+    //    }
 
-        public void incrementNeutralCount()
-        {
-            neutralCount++;
-        }
+    //    public void incrementNegativeCount()
+    //    {
+    //        negativeCount++;
+    //    }
 
-        public void handleMutualInformation() //Feature selection via Mutual Information
-        {
-            double first = positiveCount * 1.0 / count, second = negativeCount * 1.0 / count, third = neutralCount * 1.0 / count, firstLog = 0, secondLog = 0, thirdLog = 0;
-            int all = positiveCount + negativeCount + neutralCount;
+    //    public void incrementNeutralCount()
+    //    {
+    //        neutralCount++;
+    //    }
 
-            if (first != 0) //0 ise logaritma alma
-            {
-                firstLog = Math.Log((positiveCount * count) / (756.0 * all), 2);
+    //    public void handleMutualInformation() //Feature selection via Mutual Information
+    //    {
+    //        double first = positiveCount * 1.0 / count, second = negativeCount * 1.0 / count, third = neutralCount * 1.0 / count, firstLog = 0, secondLog = 0, thirdLog = 0;
+    //        int all = positiveCount + negativeCount + neutralCount;
 
-            }
-            if (second != 0) 
-            {
-                secondLog = Math.Log((negativeCount * count) / (1287.0 * all), 2);
-            }
-            if (third != 0)
-            {
-                thirdLog = Math.Log((neutralCount * count) / (957.0 * all), 2);
-            }
+    //        if (first != 0) //0 ise logaritma alma
+    //        {
+    //            firstLog = Math.Log((positiveCount * count) / (756.0 * all), 2);
+
+    //        }
+    //        if (second != 0) 
+    //        {
+    //            secondLog = Math.Log((negativeCount * count) / (1287.0 * all), 2);
+    //        }
+    //        if (third != 0)
+    //        {
+    //            thirdLog = Math.Log((neutralCount * count) / (957.0 * all), 2);
+    //        }
 
 
-            MutualInfo = (first * firstLog) + (second * secondLog) + (third * thirdLog);
-        }
+    //        MutualInfo = (first * firstLog) + (second * secondLog) + (third * thirdLog);
+    //    }
 
 
-        public void handleEs()
-        {
-            double first = positiveCount * 1.0 / count, second = negativeCount * 1.0 / count, third = neutralCount * 1.0 / count, firstLog = 0, secondLog = 0, thirdLog = 0;
+    //    public void handleEs()
+    //    {
+    //        double first = positiveCount * 1.0 / count, second = negativeCount * 1.0 / count, third = neutralCount * 1.0 / count, firstLog = 0, secondLog = 0, thirdLog = 0;
 
-            if (first != 0)  //0 ise logaritma alma
-            {
-                firstLog = Math.Log(first, 2);
-            }
-            if (second != 0)
-            {
-                secondLog = Math.Log(second, 2);
-            }
-            if (third != 0)
-            {
-                thirdLog = Math.Log(third, 2);
-            }
+    //        if (first != 0)  //0 ise logaritma alma
+    //        {
+    //            firstLog = Math.Log(first, 2);
+    //        }
+    //        if (second != 0)
+    //        {
+    //            secondLog = Math.Log(second, 2);
+    //        }
+    //        if (third != 0)
+    //        {
+    //            thirdLog = Math.Log(third, 2);
+    //        }
 
-            Es = -first * firstLog - second * secondLog - third * thirdLog;
-        }
-    }
+    //        Es = -first * firstLog - second * secondLog - third * thirdLog;
+    //    }
+    //}
 
     public class Data
     {
-        public List<Object> list = new List<Object>();
+        static public List<Column> list = new List<Column>();
         //List<Object> negative = new List<Object>();
         //List<Object> neutral = new List<Object>();
         List<string> stop_words = new List<string>();
-        static public List<Test> testData = new List<Test>();
+        //static public List<Test> testData = new List<Test>();
         Zemberek zemberek = new Zemberek(new TurkiyeTurkcesi());
         static public double Es; //Global E(s) değeri
-
+        //static public int totalWordsCount;
+        static public List<string> totalWords = new List<string>();
+        
         public Data()
         {
             init();
+            writeOutputs();
             handleStaticEs();
         }
 
@@ -139,31 +153,32 @@ namespace Project
                 readAndHandle("2");
                 readAndHandle("3");
 
-                double averageMI = 0.0;
-                foreach (Object o in list)
+                //double averageMI = 0.0;
+                foreach (Column o in list)
                 {
-                    o.handleMutualInformation();
-                    averageMI += o.MutualInfo;
+                    foreach (Word w in o.words)
+                        w.handleTfIdf();
+                    //Console.WriteLine(o.words[0].count);
+                    //o.handleMutualInformation();
+                    //o.handleEs();
+                    //averageMI += o.MutualInfo;
                 }
 
-                List<Object> newList = new List<Object>();
-                averageMI = averageMI / list.Count;
+                //List<Object> newList = new List<Object>();
+                //averageMI = averageMI / list.Count;
 
-                foreach(Object o in list)  //MI ı ortalamadan düşük olan wordler temizlendi
-                {
-                    if(o.MutualInfo > averageMI)
-                    {
-                        newList.Add(o);
-                    }
-                }
-
-                newList.Sort((x, y) => y.MutualInfo.CompareTo(x.MutualInfo)); //MI a göre büyükten küçüğe sıralama
-                list = newList;
-
-                //foreach(Object i in list)
+                //foreach(Object o in list)  //MI ı ortalamadan düşük olan wordler temizlendi
                 //{
-                //    Console.WriteLine(i.MutualInfo);
+                //    if(o.MutualInfo > averageMI)
+                //    {
+                //        newList.Add(o);
+                //    }
                 //}
+
+                //newList.Sort((x, y) => y.MutualInfo.CompareTo(x.MutualInfo)); //MI a göre büyükten küçüğe sıralama
+                //list = newList;
+                Console.WriteLine(list.Count);
+                
 
                 Console.WriteLine();
                 Console.WriteLine("The data processing was finished.");
@@ -187,59 +202,99 @@ namespace Project
                 var stopWordedStrings = stopWords(tokenizedStrings);
                 var stemmedStrings = stemming(stopWordedStrings);
 
-                if (num == "1") //test datalarının knn için işlenerek aktarımı
+                Column column;
+
+                if (num == "1") //klasör isimlerine göre başka sınıf frekanslarını arttırır
                 {
-                    testData.Add(new Test(stemmedStrings, "positive"));
+                    column = new Column(stemmedStrings, "1");
                 }
                 else if (num == "2")
                 {
-                    testData.Add(new Test(stemmedStrings, "negative"));
+                    column = new Column(stemmedStrings, "1");
                 }
                 else
                 {
-                    testData.Add(new Test(stemmedStrings, "neutral"));
+                    column = new Column(stemmedStrings, "1");
                 }
+
+                list.Add(column);
 
                 foreach (string i in stemmedStrings) //handle edilmiş dizimizi alıp frekansları hesaplar
                 {
-                    Object obj = list.Find(x => x.name == i);
-                    bool isNew =  false;
-
-                    if (obj != null)
+                    string s = totalWords.Find(x => x == i);
+                    if(s == null)
                     {
-                        obj.incrementCount();
+                        totalWords.Add(i);
                     }
-                    else
-                    {
-                        obj = new Object(i);
-                        isNew = true;
-                    }
-
-                    if(num == "1") //klasör isimlerine göre başka sınıf frekanslarını arttırır
-                    {
-                        obj.incrementPositiveCount();
-                    } else if(num == "2")
-                    {
-                        obj.incrementNegativeCount();
-                    } else
-                    {
-                        obj.incrementNeutralCount();
-                    }
-                    
-
-                    if(isNew)
-                    {
-                        list.Add(obj);
-                    }
-
                 }
             }
 
             Console.Write(" Ok.");
             Console.WriteLine();
-
         }
 
+        void writeOutputs()
+        {
+            Console.WriteLine("Writing csv..." + totalWords.Count);
+            //totalWords.RemoveRange(0, 11000);
+
+            string column = "FILE,";
+            totalWords.ForEach(x => column += x + ",");
+            column += "Sınıf";
+            List<string> rows = new List<string>();
+            int i = 0;
+            foreach (Column c in list)
+            {
+                //Console.WriteLine(i);
+
+                string row = "Kayıt" + i + ",";
+                foreach(string x in totalWords)
+                {
+                    Word word = c.words.Find(y => y.name == x);
+                    if (word == null)
+                    {
+                        row += 0 + ",";
+                    }
+                    else
+                    {
+                        row += word.tfIdf + ",";
+                    }
+                }
+                row += i;
+                rows.Add(row);
+                i++;
+            }
+
+            Assembly asm = Assembly.GetExecutingAssembly();
+            string path = Path.GetDirectoryName(asm.Location) + "/csv.txt";
+
+            string allText = column + Environment.NewLine;
+            File.WriteAllText(path, column);
+
+            using (var sw = new StreamWriter(path))
+            {
+                
+                    sw.WriteLine(column);
+                foreach (string r in rows)
+                {
+                    sw.WriteLine(r);
+                }
+            }
+
+            //foreach (string r in rows)
+            //{
+            //    allText += r + Environment.NewLine;
+            //    Console.WriteLine(r);
+            //}
+
+           
+
+            
+            //File.WriteAllText(path, allText);
+
+            Console.Write("Ok.");
+
+        }
 
         string[] tokenizer(string value) //cümleyi kelimelere parçalama
         {
@@ -254,7 +309,7 @@ namespace Project
             {
                 foreach (string s in stop_words)
                 {
-                    if (a == s)
+                    if (a.Contains(s))
                     {
                         newArray.Remove(a);
                         break;
@@ -282,6 +337,19 @@ namespace Project
 
 
             return newArray.ToArray();
+        }
+
+        public static int getFrequentByName(string name)
+        {
+            int count = 0;
+            foreach(Column c in list)
+            {
+                Word w = c.words.Find(x => x.name == name);
+                if (w != null)
+                    count++;
+            }
+
+            return count;
         }
 
         void handleStaticEs()
