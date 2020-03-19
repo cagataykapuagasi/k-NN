@@ -9,6 +9,17 @@ using System.Text.RegularExpressions;
 
 namespace Project
 {
+    public class Test
+    {
+       public List<string> list = new List<string>();
+       public string className;
+
+       public Test(string[] list, string className)
+        {
+            this.list.AddRange(list);
+            this.className = className;
+        }
+    }
     public class Object
     {
         public string name;
@@ -71,6 +82,7 @@ namespace Project
         //List<Object> negative = new List<Object>();
         //List<Object> neutral = new List<Object>();
         List<string> stop_words = new List<string>();
+        static public List<Test> testData = new List<Test>();
         Zemberek zemberek = new Zemberek(new TurkiyeTurkcesi());
         static public double Es; //Global E(s) değeri
 
@@ -141,6 +153,19 @@ namespace Project
                 var tokenizedStrings = tokenizer(File.ReadAllText(file).ToLower(new CultureInfo("tr-TR", false)));
                 var stopWordedStrings = stopWords(tokenizedStrings);
                 var stemmedStrings = stemming(stopWordedStrings);
+
+                if (num == "1") //klasör isimlerine göre başka sınıf frekanslarını arttırır
+                {
+                    testData.Add(new Test(stemmedStrings, "positive"));
+                }
+                else if (num == "2")
+                {
+                    testData.Add(new Test(stemmedStrings, "negative"));
+                }
+                else
+                {
+                    testData.Add(new Test(stemmedStrings, "neutral"));
+                }
 
                 foreach (string i in stemmedStrings) //handle edilmiş dizimizi alıp frekansları hesaplar
                 {
