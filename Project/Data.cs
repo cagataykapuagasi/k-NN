@@ -112,7 +112,13 @@ namespace Project
                     }
                 }
 
+                newList.Sort((x, y) => y.MutualInfo.CompareTo(x.MutualInfo));
                 list = newList;
+
+                //foreach(Object i in list)
+                //{
+                //    Console.WriteLine(i.MutualInfo);
+                //}
 
                 Console.WriteLine();
                 Console.WriteLine("The data processing was finished.");
@@ -161,6 +167,7 @@ namespace Project
                     {
                         obj.incrementNeutralCount();
                     }
+                    
 
                     if(isNew)
                     {
