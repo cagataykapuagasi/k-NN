@@ -13,18 +13,30 @@ namespace Project
     {
        public List<string> list = new List<string>();
        public string className;
+       public string guess;
 
-       public Test(string[] list, string className)
+        public string Guess
         {
+            get
+            {
+                return guess;
+            }
+            set
+            {
+                guess = value;
+            }
+        }
+       public Test(string[] list, string className)
+       {
             this.list.AddRange(list);
             this.className = className;
-        }
+       }
     }
     public class Object
     {
         public string name;
         public int count, positiveCount, negativeCount, neutralCount;
-        public double MutualInfo;
+        public double MutualInfo, Es;
 
         public Object(string name)
         {
@@ -73,6 +85,27 @@ namespace Project
 
 
             MutualInfo = (first * firstLog) + (second * secondLog) + (third * thirdLog);
+        }
+
+
+        public void handleEs()
+        {
+            double first = positiveCount * 1.0 / count, second = negativeCount * 1.0 / count, third = neutralCount * 1.0 / count, firstLog = 0, secondLog = 0, thirdLog = 0;
+
+            if (first != 0)  //0 ise logaritma alma
+            {
+                firstLog = Math.Log(first, 2);
+            }
+            if (second != 0)
+            {
+                secondLog = Math.Log(second, 2);
+            }
+            if (third != 0)
+            {
+                thirdLog = Math.Log(third, 2);
+            }
+
+            Es = -first * firstLog - second * secondLog - third * thirdLog;
         }
     }
 
