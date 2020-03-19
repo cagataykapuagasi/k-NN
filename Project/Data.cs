@@ -124,7 +124,7 @@ namespace Project
                     }
                 }
 
-                newList.Sort((x, y) => y.MutualInfo.CompareTo(x.MutualInfo));
+                newList.Sort((x, y) => y.MutualInfo.CompareTo(x.MutualInfo)); //MI a göre büyükten küçüğe sıralama
                 list = newList;
 
                 //foreach(Object i in list)
@@ -154,7 +154,7 @@ namespace Project
                 var stopWordedStrings = stopWords(tokenizedStrings);
                 var stemmedStrings = stemming(stopWordedStrings);
 
-                if (num == "1") //klasör isimlerine göre başka sınıf frekanslarını arttırır
+                if (num == "1") //test datalarının knn için işlenerek aktarımı
                 {
                     testData.Add(new Test(stemmedStrings, "positive"));
                 }
