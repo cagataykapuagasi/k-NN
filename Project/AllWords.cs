@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Project
 {
-    public class AllWords
+    public class AllWords //bütün kelimelerin toplandığı yer. Csv dosyasındaki An kısmının yazımı için kullanılmıştır.
     {
         public string name;
         public int count;

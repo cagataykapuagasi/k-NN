@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Project
 {
-    class Results
+    class Results //result class
     {
         public int Tp, Fp, Fn;
 
@@ -30,7 +32,7 @@ namespace Project
 
         public List<Column> list = null;
         public List<Column> testData = null;
-        public List<Results> positiveResults = new List<Results>();
+        public List<Results> positiveResults = new List<Results>(); //sonuç çıktılarının biriktirildiği listeler.
         public List<Results> negativeResults = new List<Results>();
         public List<Results> neutralResults = new List<Results>();
 
@@ -42,18 +44,24 @@ namespace Project
 
         void init()
         {
-            for(int i = 0; i<10; i++)
-            {
+            Console.WriteLine();
+            for (int i = 0; i<10; i++) //knn algoritmasını dinamik olarak test ve train verilerini seçip değiştirerek çalıştırır
+            { //http://bilgisayarkavramlari.sadievrenseker.com/2013/03/31/k-fold-cross-validation-k-katlamali-carpraz-dogrulama/
+                Console.WriteLine();
+                Console.Write("cross-validation: " + i);
+
                 List<Column> test = list.GetRange(currentBeginIndex, 300);
                 List<Column> train = new List<Column>(list);
                 train.RemoveRange(currentBeginIndex, 300);
                 knn(train, test);
                 currentBeginIndex += 300;
+                Console.Write(" Ok.");
             }
+
             performanceMesaure();
         }
 
-        void knn(List<Column> train, List<Column> test)
+        void knn(List<Column> train, List<Column> test) //knn
         {
             Results positiveResult = new Results();
             Results negativeResult = new Results();
@@ -103,7 +111,6 @@ namespace Project
                     else
                         neutralResult.incrementFn();
                 }
-                //Console.WriteLine(t.guessClassName+ " Doğrusu:" + t.className);
             }
 
             positiveResults.Add(positiveResult);
@@ -112,8 +119,12 @@ namespace Project
         }
 
 
-        void performanceMesaure()
+        void performanceMesaure() //sonuç ekranı çıktısı. 10 adet knn çıktısının ortalamaları alınıp çıktı olarak verilir.
         {
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.Write("Writing result...");
+
             int class1Tp = 0, class1Fp = 0, class1Fn = 0, class2Tp = 0, class2Fp = 0, class2Fn = 0, class3Tp = 0, class3Fp = 0, class3Fn = 0;
             double class1Precision, class1Recall, class1FScore, class2Precision, class2Recall, class2FScore, class3Precision, class3Recall, class3FScore;
 
@@ -155,12 +166,31 @@ namespace Project
             class3FScore = 2 * (class3Precision * class3Recall) / (class3Precision + class3Recall);
 
             string row1 = "Sınıf1 " + "Sınıf2 " + "Sınıf3 " + "Macro Average " +"Micro Average",
-                row2 = "Precision",
-                row3 = "Recall",
-                row4 = "F-Score",
-                row5 = "Tp Adedi",
-                row6 = "Fp Adedi",
-                row7 = "Fn Adedi";
+                row2 = "Precision "+ class1Precision + " " + class2Precision + " " + class3Precision,
+                row3 = "Recall " + class1Recall + " " + class2Recall + " " + class3Recall,
+                row4 = "F-Score "+ class1FScore + " " + class2FScore + " " + class3FScore,
+                row5 = "Tp Adedi " + class1Tp + " " + class2Tp + " " + class3Tp,
+                row6 = "Fp Adedi "+ class1Fp + " " + class2Fp + " " + class3Fp,
+                row7 = "Fn Adedi "+ class1Fn + " " + class2Fn + " " + class3Fn;
+
+            Assembly asm = Assembly.GetExecutingAssembly();
+            string path = Path.GetDirectoryName(asm.Location) + "/result.txt";
+
+            using (var sw = new StreamWriter(path))
+            {
+                sw.WriteLine(row1);
+                sw.WriteLine(row2);
+                sw.WriteLine(row3);
+                sw.WriteLine(row4);
+                sw.WriteLine(row5);
+                sw.WriteLine(row6);
+                sw.WriteLine(row7);
+            }
+
+            Console.Write(" The result.txt is ready in Project/bin/Debug.");
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine("The process was finished.");
         }
     }
 }

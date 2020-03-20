@@ -14,13 +14,9 @@ namespace Project
     public class Data
     {
         static public List<Column> list = new List<Column>();
-        //List<Object> negative = new List<Object>();
-        //List<Object> neutral = new List<Object>();
         List<string> stop_words = new List<string>();
-        //static public List<Test> testData = new List<Test>();
         Zemberek zemberek = new Zemberek(new TurkiyeTurkcesi());
         static public double Es; //Global E(s) değeri
-        //static public int totalWordsCount;
         static public List<AllWords> totalWords = new List<AllWords>();
         
         public Data()
@@ -128,7 +124,7 @@ namespace Project
             Console.WriteLine();
         }
 
-        void writeOutputs()
+        void writeOutputs() //Csv dosyasının yazılması.
         {
             Console.Write("Writing csv...");
             string column = "FILE,";
@@ -157,12 +153,9 @@ namespace Project
             }
 
             Assembly asm = Assembly.GetExecutingAssembly();
-            string path = Path.GetDirectoryName(asm.Location) + "/csv.txt";
+            string path = Path.GetDirectoryName(asm.Location) + "/csv.txt"; //bin/Debug
 
-            string allText = column + Environment.NewLine;
-            File.WriteAllText(path, column);
-
-            using (var sw = new StreamWriter(path))
+            using (var sw = new StreamWriter(path)) 
             {
                 sw.WriteLine(column);
                 foreach (string r in rows)
@@ -170,9 +163,7 @@ namespace Project
                     sw.WriteLine(r);
                 }
             }
-
-            Console.Write(" The csv is ready in Project/bin/Debug.");
-
+            Console.Write(" The csv.txt is ready in Project/bin/Debug.");
         }
 
         string[] tokenizer(string value) //cümleyi kelimelere parçalama
@@ -219,7 +210,7 @@ namespace Project
             return newArray.ToArray();
         }
 
-        public static int getFrequentByName(string name)
+        public static int getFrequentByName(string name) //Bir kelimenin kaç kez geçtiğini bulan fonksiyon.
         {
             int count = 0;
             foreach(Column c in list)
@@ -232,7 +223,7 @@ namespace Project
             return count;
         }
 
-        void handleStaticEs()
+        void handleStaticEs() //genel Es değerinin hesaplanması.
         {
             double positiveCount = 756, negativeCount = 1287, neutralCount = 957, count = 3000;
 

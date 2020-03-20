@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Project
 {
-    public class Column
+    public class Column //Herbir text dosyasını ifade eder.
     {
         public List<Word> words = new List<Word>();
         public string className;
@@ -32,12 +32,6 @@ namespace Project
                 }
 
             }
-
-            //foreach(Word w in words)
-            //{
-            //    w.handleTfIdf();
-            //}
-
 
             words.Sort((x, y) => y.count.CompareTo(x.count));
         }

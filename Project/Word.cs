@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Project
 {
-    public class Word
+    public class Word //Text dosyalarının içindeki kelime hali.
     {
         public string name, className;
         public int count;
@@ -24,14 +24,14 @@ namespace Project
             count++;
         }
 
-        public void handleTfIdf()
+        public void handleTfIdf() //if-idf hesabı
         {
+            //http://bilgisayarkavramlari.sadievrenseker.com/2012/10/22/tf-idf/
+
             double tf = count * 1.0 / Data.totalWords.Count;
             double idf = Math.Log(3000 / Data.getFrequentByName(name), 10);
 
             tfIdf = tf * idf;
-
-            //Console.WriteLine(@"tf: {0} idf: {1} tfidf: {2}",tf,idf, tfIdf);
         }
     }
 }
