@@ -8,13 +8,14 @@ namespace Project
 {
     public class Word
     {
-        public string name;
+        public string name, className;
         public int count;
         public double tfIdf;
 
-        public Word(string name)
+        public Word(string name, string className)
         {
             this.name = name;
+            this.className = className;
             incrementCount();
         }
 

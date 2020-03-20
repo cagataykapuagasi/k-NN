@@ -11,8 +11,9 @@ namespace Project
         static void Main(string[] args)
         {
             Data data = new Data();
-
-            Console.WriteLine("Hello World!");
+            Knn knn = new Knn(Data.list);
+            
+            //Console.WriteLine("Hello World!");
 
             Console.Read();
         }

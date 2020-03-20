@@ -10,6 +10,7 @@ namespace Project
     {
         public List<Word> words = new List<Word>();
         public string className;
+        public string guessClassName;
 
         public Column(string[] _words, string className)
         {
@@ -23,7 +24,7 @@ namespace Project
                 Word word = words.Find(x => x.name == i);
                 if (word == null)
                 {
-                   word = new Word(i);
+                   word = new Word(i, className);
                    words.Add(word);
                 } else
                 {

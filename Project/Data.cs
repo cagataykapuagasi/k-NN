@@ -97,15 +97,15 @@ namespace Project
 
                 if (num == "1") //klasör isimlerine göre başka sınıf frekanslarını arttırır
                 {
-                    column = new Column(stemmedStrings, "1");
+                    column = new Column(stemmedStrings, "Positive");
                 }
                 else if (num == "2")
                 {
-                    column = new Column(stemmedStrings, "1");
+                    column = new Column(stemmedStrings, "Negative");
                 }
                 else
                 {
-                    column = new Column(stemmedStrings, "1");
+                    column = new Column(stemmedStrings, "Neutral");
                 }
 
                 list.Add(column);
