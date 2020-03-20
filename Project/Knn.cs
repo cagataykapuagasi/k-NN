@@ -9,15 +9,21 @@ namespace Project
     class Knn
     {
         int k = 0;
+        //public List<Test> testData = Data.testData;
+        public List<Object> list = null;
 
         public Knn(List<Object> list)
         {
-            init(list);
+            this.list = list;
+            init();
         }
 
-        void init(List<Object> list)
+        void init()
         {
-            
+            foreach(Object i in list)
+            {
+                
+            }
         }
     }
 }
