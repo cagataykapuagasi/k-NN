@@ -11,115 +11,6 @@ using System.Reflection;
 
 namespace Project
 {
-    //public class Column
-    //{
-    //    public List<Object> list = new List<Object>();
-    //    public string className;
-    //    public Column()
-    //    {
-
-    //    }
-    //}
-    //public class Test
-    //{
-    //   public List<string> list = new List<string>();
-    //   public string className;
-    //   public string guess;
-
-    //    public string Guess
-    //    {
-    //        get
-    //        {
-    //            return guess;
-    //        }
-    //        set
-    //        {
-    //            guess = value;
-    //        }
-    //    }
-    //   public Test(string[] list, string className)
-    //   {
-    //        this.list.AddRange(list);
-    //        this.className = className;
-    //   }
-    //}
-    //public class Object
-    //{
-    //    public string name;
-    //    public int count, positiveCount, negativeCount, neutralCount;
-    //    public double MutualInfo, Es, tfIdf;
-
-    //    public Object(string name)
-    //    {
-    //        this.name = name;
-    //        incrementCount();
-    //    }
-
-    //    public void incrementCount()
-    //    {
-    //        count++;
-    //    }
-
-    //    public void incrementPositiveCount()
-    //    {
-    //        positiveCount++;
-    //    }
-
-    //    public void incrementNegativeCount()
-    //    {
-    //        negativeCount++;
-    //    }
-
-    //    public void incrementNeutralCount()
-    //    {
-    //        neutralCount++;
-    //    }
-
-    //    public void handleMutualInformation() //Feature selection via Mutual Information
-    //    {
-    //        double first = positiveCount * 1.0 / count, second = negativeCount * 1.0 / count, third = neutralCount * 1.0 / count, firstLog = 0, secondLog = 0, thirdLog = 0;
-    //        int all = positiveCount + negativeCount + neutralCount;
-
-    //        if (first != 0) //0 ise logaritma alma
-    //        {
-    //            firstLog = Math.Log((positiveCount * count) / (756.0 * all), 2);
-
-    //        }
-    //        if (second != 0) 
-    //        {
-    //            secondLog = Math.Log((negativeCount * count) / (1287.0 * all), 2);
-    //        }
-    //        if (third != 0)
-    //        {
-    //            thirdLog = Math.Log((neutralCount * count) / (957.0 * all), 2);
-    //        }
-
-
-    //        MutualInfo = (first * firstLog) + (second * secondLog) + (third * thirdLog);
-    //    }
-
-
-    //    public void handleEs()
-    //    {
-    //        double first = positiveCount * 1.0 / count, second = negativeCount * 1.0 / count, third = neutralCount * 1.0 / count, firstLog = 0, secondLog = 0, thirdLog = 0;
-
-    //        if (first != 0)  //0 ise logaritma alma
-    //        {
-    //            firstLog = Math.Log(first, 2);
-    //        }
-    //        if (second != 0)
-    //        {
-    //            secondLog = Math.Log(second, 2);
-    //        }
-    //        if (third != 0)
-    //        {
-    //            thirdLog = Math.Log(third, 2);
-    //        }
-
-    //        Es = -first * firstLog - second * secondLog - third * thirdLog;
-    //    }
-    //}
-
     public class Data
     {
         static public List<Column> list = new List<Column>();
@@ -162,7 +53,6 @@ namespace Project
                 foreach (AllWords a in totalWords)
                 {
                     a.handleThreshold();
-                    //Console.WriteLine(a.threshold);
                     if (a.count > s)
                         newTotalWords.Add(a);
                 }
@@ -172,37 +62,13 @@ namespace Project
 
                 Console.WriteLine();
                 Console.WriteLine();
-                //double averageMI = 0.0;
                 Console.Write("Calculating tf-idf...");
                 foreach (Column o in list)
                 {
                     foreach (Word w in o.words)
                         w.handleTfIdf();
-                    //Console.WriteLine(o.words[0].count);
-                    //o.handleMutualInformation();
-                    //o.handleEs();
-                    //averageMI += o.MutualInfo;
                 }
                 Console.Write(" Ok.");
-
-
-
-                //List<Object> newList = new List<Object>();
-                //averageMI = averageMI / list.Count;
-
-                //foreach(Object o in list)  //MI ı ortalamadan düşük olan wordler temizlendi
-                //{
-                //    if(o.MutualInfo > averageMI)
-                //    {
-                //        newList.Add(o);
-                //    }
-                //}
-
-                //newList.Sort((x, y) => y.MutualInfo.CompareTo(x.MutualInfo)); //MI a göre büyükten küçüğe sıralama
-                //list = newList;
-                //Console.WriteLine(list.Count);
-                
-
                 Console.WriteLine();
                 Console.WriteLine();
                 Console.WriteLine("The data processing was finished.");
@@ -265,8 +131,6 @@ namespace Project
         void writeOutputs()
         {
             Console.Write("Writing csv...");
-            //totalWords.RemoveRange(0, 11000);
-
             string column = "FILE,";
             totalWords.ForEach(x => column += x.name + ",");
             column += "Sınıf";
@@ -274,8 +138,6 @@ namespace Project
             int i = 0;
             foreach (Column c in list)
             {
-                //Console.WriteLine(i);
-
                 string row = "Kayıt" + i + ",";
                 foreach(AllWords x in totalWords)
                 {
@@ -308,17 +170,6 @@ namespace Project
                     sw.WriteLine(r);
                 }
             }
-
-            //foreach (string r in rows)
-            //{
-            //    allText += r + Environment.NewLine;
-            //    Console.WriteLine(r);
-            //}
-
-           
-
-            
-            //File.WriteAllText(path, allText);
 
             Console.Write(" The csv is ready in Project/bin/Debug.");
 
