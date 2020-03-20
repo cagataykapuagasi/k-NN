@@ -153,6 +153,8 @@ namespace Project
                 readAndHandle("2");
                 readAndHandle("3");
 
+                Console.WriteLine();
+                Console.Write("Feature selection handling...");
                 double s = 0;
                 totalWords.ForEach(x => s += x.count);
                 s = s * 1.0 / totalWords.Count;
@@ -166,8 +168,12 @@ namespace Project
                 }
 
                 totalWords = newTotalWords;
+                Console.Write(" Ok.");
 
+                Console.WriteLine();
+                Console.WriteLine();
                 //double averageMI = 0.0;
+                Console.Write("Calculating tf-idf...");
                 foreach (Column o in list)
                 {
                     foreach (Word w in o.words)
@@ -177,9 +183,10 @@ namespace Project
                     //o.handleEs();
                     //averageMI += o.MutualInfo;
                 }
+                Console.Write(" Ok.");
 
 
-               
+
                 //List<Object> newList = new List<Object>();
                 //averageMI = averageMI / list.Count;
 
@@ -193,11 +200,13 @@ namespace Project
 
                 //newList.Sort((x, y) => y.MutualInfo.CompareTo(x.MutualInfo)); //MI a göre büyükten küçüğe sıralama
                 //list = newList;
-                Console.WriteLine(list.Count);
+                //Console.WriteLine(list.Count);
                 
 
                 Console.WriteLine();
+                Console.WriteLine();
                 Console.WriteLine("The data processing was finished.");
+                Console.WriteLine();
             }
             catch (Exception e)
             {
@@ -255,7 +264,7 @@ namespace Project
 
         void writeOutputs()
         {
-            Console.WriteLine("Writing csv..." + totalWords.Count);
+            Console.Write("Writing csv...");
             //totalWords.RemoveRange(0, 11000);
 
             string column = "FILE,";
@@ -293,8 +302,7 @@ namespace Project
 
             using (var sw = new StreamWriter(path))
             {
-                
-                    sw.WriteLine(column);
+                sw.WriteLine(column);
                 foreach (string r in rows)
                 {
                     sw.WriteLine(r);
@@ -312,7 +320,7 @@ namespace Project
             
             //File.WriteAllText(path, allText);
 
-            Console.Write("Ok.");
+            Console.Write(" The csv is ready in Project/bin/Debug.");
 
         }
 
