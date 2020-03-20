@@ -130,7 +130,7 @@ namespace Project
         Zemberek zemberek = new Zemberek(new TurkiyeTurkcesi());
         static public double Es; //Global E(s) değeri
         //static public int totalWordsCount;
-        static public List<string> totalWords = new List<string>();
+        static public List<AllWords> totalWords = new List<AllWords>();
         
         public Data()
         {
@@ -153,6 +153,20 @@ namespace Project
                 readAndHandle("2");
                 readAndHandle("3");
 
+                double s = 0;
+                totalWords.ForEach(x => s += x.count);
+                s = s * 1.0 / totalWords.Count;
+                List<AllWords> newTotalWords = new List<AllWords>();
+                foreach (AllWords a in totalWords)
+                {
+                    a.handleThreshold();
+                    //Console.WriteLine(a.threshold);
+                    if (a.count > s)
+                        newTotalWords.Add(a);
+                }
+
+                totalWords = newTotalWords;
+
                 //double averageMI = 0.0;
                 foreach (Column o in list)
                 {
@@ -164,6 +178,8 @@ namespace Project
                     //averageMI += o.MutualInfo;
                 }
 
+
+               
                 //List<Object> newList = new List<Object>();
                 //averageMI = averageMI / list.Count;
 
@@ -221,10 +237,14 @@ namespace Project
 
                 foreach (string i in stemmedStrings) //handle edilmiş dizimizi alıp frekansları hesaplar
                 {
-                    string s = totalWords.Find(x => x == i);
-                    if(s == null)
+                    AllWords a = totalWords.Find(x => x.name == i);
+                    if(a == null)
                     {
-                        totalWords.Add(i);
+                        a = new AllWords(i);
+                        totalWords.Add(a);
+                    } else
+                    {
+                        a.incrementCount();
                     }
                 }
             }
@@ -239,7 +259,7 @@ namespace Project
             //totalWords.RemoveRange(0, 11000);
 
             string column = "FILE,";
-            totalWords.ForEach(x => column += x + ",");
+            totalWords.ForEach(x => column += x.name + ",");
             column += "Sınıf";
             List<string> rows = new List<string>();
             int i = 0;
@@ -248,9 +268,9 @@ namespace Project
                 //Console.WriteLine(i);
 
                 string row = "Kayıt" + i + ",";
-                foreach(string x in totalWords)
+                foreach(AllWords x in totalWords)
                 {
-                    Word word = c.words.Find(y => y.name == x);
+                    Word word = c.words.Find(y => y.name == x.name);
                     if (word == null)
                     {
                         row += 0 + ",";
@@ -309,7 +329,8 @@ namespace Project
             {
                 foreach (string s in stop_words)
                 {
-                    if (a.Contains(s))
+                        
+                    if (a == s)
                     {
                         newArray.Remove(a);
                         break;
