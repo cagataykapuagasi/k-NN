@@ -13,7 +13,6 @@ namespace Project
             Data data = new Data();
             Knn knn = new Knn(Data.list);
             
-            //Console.WriteLine("Hello World!");
 
             Console.Read();
         }
